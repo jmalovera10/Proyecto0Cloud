@@ -1,5 +1,5 @@
 {
-  "name": "manejador_de_eventos",
+  "name": "eventapp_backend",
   "version": "1.0.0",
   "description": "Aplicación para administrar eventos",
   "main": "server.js",
@@ -23,6 +23,7 @@
   "dependencies": {
     "express": "^4.16.2",
     "mysql": "^2.15.0",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "bcrypt": "^3.0.3"
   }
 }

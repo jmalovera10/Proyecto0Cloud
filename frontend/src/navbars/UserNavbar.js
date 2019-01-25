@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import './Home.css';
+import './UserNavbar.css';
 
-export default class Home extends Component {
+export default class UserNavbar extends Component {
 
     render() {
         return (

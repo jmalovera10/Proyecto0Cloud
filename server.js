@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
+const bcrypt = require('bcrypt');
 const assert = require("assert");
 const CRUD = require("./CRUD");
 const path = require("path");
@@ -41,6 +42,10 @@ app.get("/API/myWeight/last/:userId", function (req, res) {
         }, Number(req.params.userId));
     });
 });*/
+
+app.get("/API/secret", (req, res)=>{
+    res.send('The password is potato');
+});
 
 app.get("/API/login/:userData", (req, res) => {
     let encoded = req.params.userData;
