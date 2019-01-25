@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
     constructor(props) {
