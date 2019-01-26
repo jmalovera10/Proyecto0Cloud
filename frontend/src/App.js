@@ -1,16 +1,24 @@
 import React, {Component} from 'react';
+import UserNavbar from './navbars/UserNavbar';
+import IndexNavbar from './navbars/IndexNavbar';
+import { Route, Switch } from "react-router-dom";
+
 import './App.css';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            logged : true
+        }
     }
 
     render() {
         return (
             <div>
-                <h1>Hello World!</h1>
+                {
+                    this.state.logged? <UserNavbar/>: <IndexNavbar/>
+                }
             </div>
         );
     }
