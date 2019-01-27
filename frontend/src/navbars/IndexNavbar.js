@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom'
 import './IndexNavbar.css';
 
 export default class IndexNavbar extends Component {
@@ -11,8 +12,11 @@ export default class IndexNavbar extends Component {
             <nav className="navbar navbar-dark bg-dark">
                 <a className="navbar-brand" href="#">Eventapp</a>
                 <div className="ml-auto">
-                    <button className="btn btn-success">Registrarse</button>
-                    <button className="btn btn-outline-success">Ingresar</button>
+                    {
+                        this.props.isRegister?
+                            <Link to='/login'><button className="btn btn-outline-success">Ingresar</button></Link>
+                            :<Link to='/'><button className="btn btn-success">Registrarse</button></Link>
+                    }
                 </div>
             </nav>
         );
