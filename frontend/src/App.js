@@ -13,19 +13,28 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            logged: false,
+            auth: false,
             isRegister: null
-        }
+        };
+        this.updateAuth = this.updateAuth.bind(this);
+    }
+
+    /**
+     * Method that updates the current session state
+     * @param auth contains whether the user is authenticated or not
+     */
+    updateAuth(auth){
+        this.setState({auth: auth})
     }
 
     render() {
         return (
             <div id='main'>
                 {
-                    this.state.logged ? <UserNavbar/> : <IndexNavbar isRegister={this.state.isRegister}/>
+                    this.state.auth ? <UserNavbar/> : <IndexNavbar isRegister={this.state.isRegister}/>
                 }
                 {
-                    this.state.logged ?
+                    this.state.auth ?
                         <Switch>
                             <Route path='/events' render={(props) => (<Events/>)}/>
                             <Route path='/new_event' render={(props) => (<NewEventView/>)}/>
@@ -34,12 +43,12 @@ class App extends Component {
                             <Route exact path='/' render={(props) => {
                                 if(this.state.isRegister=== null || !this.state.isRegister)
                                     this.setState({isRegister: true});
-                                return <RegisterView/>
+                                return <RegisterView updateAuth={this.updateAuth}/>
                             }}/>
                             <Route path='/login' render={(props) => {
                                 if(this.state.isRegister=== null || this.state.isRegister)
                                     this.setState({isRegister: false});
-                                return <LoginView/>
+                                return <LoginView updateAuth={this.updateAuth}/>
                             }}/>
                         </Switch>
                 }

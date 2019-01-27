@@ -5,8 +5,14 @@ const CRUD = require("./CRUD");
 const path = require("path");
 const passport = require('passport');
 const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
 
 const app = express();
+const configDB = require('./config/mongoose/database.js');
+
+mongoose.connect(configDB.url, {useNewUrlParser: true});
+
+require("./config/passport/passport")(passport);
 
 //Uses static directory "public"
 //app.use(express.static("public"));
@@ -26,7 +32,7 @@ app.post('/API/registerUser', (req, res, next) => {
 /**
  * GET method that authenticates a user using credentials
  */
-app.get('/API/loginUser', (req, res, next) => {
+app.post('/API/loginUser', (req, res, next) => {
     CRUD.loginUser(req, res, next);
 });
 

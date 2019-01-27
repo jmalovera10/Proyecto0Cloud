@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import './LoginView.css';
+import PropTypes from 'prop-types';
 
-export default class RegisterView extends Component {
+export default class LoginView extends Component {
     constructor(props) {
         super(props);
         this.state = {
             email: null,
-            password: null
+            password: null,
+            message: null
         }
     }
 
@@ -34,15 +36,18 @@ export default class RegisterView extends Component {
     onSubmitLogin(event) {
         event.preventDefault();
         let user = {
-            username: this.state.email,
+            email: this.state.email,
             password: this.state.password
         };
-        axios.get('localhost/API/loginUser',{user})
-            .then((res)=>{
-               return res.json();
+        axios.post('/API/loginUser', user)
+            .then((res) => {
+                console.log(res);
+                return res.data;
             })
-            .then((res)=>{
-                console.log(res)
+            .then((data) => {
+                console.log(data);
+                this.setState({message: data.message});
+                this.props.updateAuth(data.auth);
             });
     }
 
@@ -55,7 +60,11 @@ export default class RegisterView extends Component {
                         <article className="card-body">
                             <h4 className="card-title text-center mb-4 mt-1">Ingresar</h4>
                             <hr/>
-                            <p className="text-success text-center">Some message goes here</p>
+                            {
+                                this.state.message?
+                                    <p className="text-success text-center">{this.state.message}</p>
+                                    :null
+                            }
                             <form>
                                 <div className="form-group">
                                     <div className="input-group">
@@ -91,3 +100,7 @@ export default class RegisterView extends Component {
         );
     }
 }
+
+LoginView.propTypes = {
+    updateAuth : PropTypes.func.isRequired
+};

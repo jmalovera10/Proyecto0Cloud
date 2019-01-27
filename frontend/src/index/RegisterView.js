@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import './RegisterView.css';
+import PropTypes from "prop-types";
 
 export default class RegisterView extends Component {
     constructor(props) {
@@ -9,7 +10,8 @@ export default class RegisterView extends Component {
             name: null,
             email: null,
             password: null,
-            confirmPassword: null
+            confirmPassword: null,
+            message: null
         }
     }
 
@@ -51,17 +53,28 @@ export default class RegisterView extends Component {
      */
     onSubmitRgister(event) {
         event.preventDefault();
-        let user = {
-            username: this.state.email,
-            password: this.state.password
-        };
-        axios.get('localhost/API/loginUser', {user})
-            .then((res) => {
-                return res.json();
-            })
-            .then((res) => {
-                console.log(res)
-            });
+        let emailRegex = /^\S+@\S+(\.\S+)+$/;
+        if(!emailRegex.test(this.state.email)) {
+            this.setState({message: "Ingrese un correo electrónico válido"})
+        }
+        else if(this.state.password !== this.state.confirmPassword){
+            this.setState({message: "Las claves deben coincidir"})
+        }
+        else{
+            let user = {
+                name: this.state.name,
+                email: this.state.email,
+                password: this.state.password
+            };
+            axios.post('/API/registerUser', user)
+                .then((res) => {
+                    return res.data;
+                })
+                .then((data) => {
+                    this.setState({message: data.message});
+                    this.props.updateAuth(data.auth);
+                });
+        }
     }
 
     render() {
@@ -79,7 +92,11 @@ export default class RegisterView extends Component {
                         <article className="card-body">
                             <h4 className="card-title text-center mb-4 mt-1">Registrarse</h4>
                             <hr/>
-                            <p className="text-success text-center">Some message goes here</p>
+                            {
+                                this.state.message?
+                                    <p className="text-success text-center">{this.state.message}</p>
+                                    :null
+                            }
                             <form>
                                 <div className="form-group">
                                     <div className="input-group">
@@ -133,3 +150,7 @@ export default class RegisterView extends Component {
         );
     }
 }
+
+RegisterView.propTypes = {
+    updateAuth : PropTypes.func.isRequired
+};

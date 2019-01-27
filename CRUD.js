@@ -1,7 +1,7 @@
-const User = require('sequelize');
 const jwtSecret = require('./config/passport/jwtConfig');
 const jwt = require('jsonwebtoken');
-const passport = require( 'passport');
+const passport = require('passport');
+const User = require('./config/mongoose/conf');
 
 /**
  * Method meant to register a user
@@ -16,27 +16,28 @@ exports.registerUser = (req, res, next) => {
         }
         if (info !== undefined) {
             console.log(info.message);
-            res.send(info.message);
+            res.send(info);
         } else {
             req.logIn(user, err => {
                 const data = {
                     name: req.body.name,
-                    username: req.body.username,
+                    email: req.body.email,
                 };
-                User.findOne({
-                    where: {
-                        username: data.username,
-                    },
-                }).then(user => {
-                    user
-                        .update({
+                User.findOne({email: data.email,})
+                    .then((user) => {
+                        user.updateOne({
                             name: data.name,
-                        })
-                        .then(() => {
+                        }).then(() => {
                             console.log('user created in db');
-                            res.status(200).send({message: 'user created'});
+                            const token = jwt.sign({id: user._id}, jwtSecret.secret);
+                            res.status(200).send({
+                                message: null,
+                                auth: true,
+                                token: token,
+                                id: user._id
+                            });
                         });
-                });
+                    });
             });
         }
     })(req, res, next);
@@ -49,25 +50,23 @@ exports.registerUser = (req, res, next) => {
  * @param next
  */
 exports.loginUser = (req, res, next) => {
+    console.log(req.body);
     passport.authenticate('login', (err, user, info) => {
         if (err) {
             console.log(err);
         }
         if (info !== undefined) {
             console.log(info.message);
-            res.send(info.message);
+            res.send(info);
         } else {
             req.logIn(user, err => {
-                User.findOne({
-                    where: {
-                        username: req.body.username,
-                    },
-                }).then(user => {
-                    const token = jwt.sign({id: user.username}, jwtSecret.secret);
+                User.findOne({email: req.body.email}).then(user => {
+                    const token = jwt.sign({id: user._id}, jwtSecret.secret);
                     res.status(200).send({
                         auth: true,
                         token: token,
-                        message: 'user found & logged in',
+                        message: null,
+                        id: user._id
                     });
                 });
             });
