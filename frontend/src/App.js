@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import UserNavbar from './navbars/UserNavbar';
-import IndexNavbar from './navbars/IndexNavbar';
 import Events from './home/EventsView';
 import NewEventView from './home/NewEventView';
 import RegisterView from './index/RegisterView';
 import LoginView from "./index/LoginView";
 import {Route, Switch, Redirect} from "react-router-dom";
+import Cookies from 'universal-cookie';
+import axios from 'axios';
 
 import './App.css';
 
@@ -17,6 +17,7 @@ class App extends Component {
             isRegister: null
         };
         this.updateAuth = this.updateAuth.bind(this);
+        this.submitNewEvent = this.submitNewEvent.bind(this);
     }
 
     /**
@@ -25,37 +26,57 @@ class App extends Component {
      */
     updateAuth(auth) {
         this.setState({auth: auth});
-        this.redirectToTarget();
     }
 
-    /**
-     * Method that redirects user to the target url
-     */
-    redirectToTarget() {
-        this.context.router.history.push(`/`);
+    submitNewEvent(event) {
+        let cookies = new Cookies();
+        event.id = cookies.get("EVENT_APP_ID_COOKIE");
+        console.log(event);
+        axios.post('/API/submit_event', event)
+            .then((res) => {
+                console.log(res);
+                return res.data;
+            })
+            .then((data) => {
+
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    componentDidMount() {
+        let cookies = new Cookies();
+        let token = cookies.get("EVENT_APP_TOKEN_COOKIE");
+        if (token) {
+            this.setState({auth: true});
+        }
     }
 
     render() {
         return (
             <div id='main'>
                 {
-                    this.state.auth ? <UserNavbar/> : <IndexNavbar isRegister={this.state.isRegister}/>
-                }
-                {
                     <Switch>
                         <Route path='/new_event' render={() =>
                             this.state.auth ?
-                                <NewEventView/>
+                                <NewEventView submitNewEvent={this.submitNewEvent}/>
                                 : <Redirect to='/register'/>
                         }/>
                         <Route path='/login' render={() =>
-                            <LoginView updateAuth={this.updateAuth}/>
+                            this.state.auth ?
+                                <Redirect to='/events'/>
+                                : <LoginView updateAuth={this.updateAuth}/>
                         }/>
                         <Route path='/register' render={() =>
-                            <RegisterView updateAuth={this.updateAuth}/>
+                            this.state.auth ?
+                                <Redirect to='/events'/>
+                                : <RegisterView updateAuth={this.updateAuth}/>
                         }/>
                         <Route path='/events' render={() =>
-                            <Events/>
+                            this.state.auth ?
+                                <Events/>
+                                : <Redirect to='/register'/>
                         }/>
                         <Route path='/' render={() =>
                             this.state.auth ?

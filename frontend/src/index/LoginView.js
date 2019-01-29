@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import './LoginView.css';
+import IndexNavbar from '../navbars/IndexNavbar';
 import PropTypes from 'prop-types';
+import Cookies from 'universal-cookie';
 
 export default class LoginView extends Component {
     constructor(props) {
@@ -48,12 +50,22 @@ export default class LoginView extends Component {
                 console.log(data);
                 this.setState({message: data.message});
                 this.props.updateAuth(data.auth);
+                if (data.auth) {
+                    let cookies = new Cookies();
+                    cookies.set("EVENT_APP_TOKEN_COOKIE", data.token, {path: '/'});
+                    cookies = new Cookies();
+                    cookies.set("EVENT_APP_ID_COOKIE", data.id, {path: '/'});
+                }
+            })
+            .catch((err) => {
+                console.log(err);
             });
     }
 
     render() {
         return (
             <div id="login">
+                <IndexNavbar isRegister={false}/>
                 <div className="row justify-content-around">
                     <div className="col-sm-3 col-lg-4"/>
                     <div className="col-sm-6 col-lg-4">
@@ -61,9 +73,9 @@ export default class LoginView extends Component {
                             <h4 className="card-title text-center mb-4 mt-1">Ingresar</h4>
                             <hr/>
                             {
-                                this.state.message?
+                                this.state.message ?
                                     <p className="text-success text-center">{this.state.message}</p>
-                                    :null
+                                    : null
                             }
                             <form>
                                 <div className="form-group">
@@ -102,5 +114,5 @@ export default class LoginView extends Component {
 }
 
 LoginView.propTypes = {
-    updateAuth : PropTypes.func.isRequired
+    updateAuth: PropTypes.func.isRequired
 };
