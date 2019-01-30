@@ -2,6 +2,7 @@ const jwtSecret = require('./config/passport/jwtConfig');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const User = require('./config/mongoose/conf');
+const mysql = require("mysql");
 
 /**
  * Method meant to register a user
@@ -75,7 +76,7 @@ exports.loginUser = (req, res, next) => {
 };
 
 /**
- * Method meant to find a user
+ * Method meant to find a user from a given token
  * @param req
  * @param res
  * @param next
@@ -98,4 +99,27 @@ exports.findUser = (req, res, next) => {
             });
         }
     })(req, res, next);
+};
+
+exports.submitEvent = (req, res, next) => {
+    let ev = req.body;
+    let connection = mysql.createConnection({
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE
+    });
+
+    connection.connect();
+
+    connection.query('INSERT INTO EVENTS (USER_ID, NAME, CATEGORY, PLACE, DIRECTION, INIT_DATE, END_DATE, MODE) ' +
+        'VALUES (' + ev.userId + ', ' + ev.name + ', ' + ev.category + ', ' + ev.place + ', ' + ev.direction + ', '
+        + ev.initDate + ', ' + ev.endDate + ')',
+        function (err, rows, fields) {
+            if (err) throw err;
+
+            console.log('The solution is: ', rows[0].solution)
+        });
+
+    connection.end()
 };

@@ -1,5 +1,4 @@
 const express = require('express');
-const mysql = require("mysql");
 const assert = require("assert");
 const CRUD = require("./CRUD");
 const path = require("path");
@@ -36,21 +35,9 @@ app.post('/API/loginUser', (req, res, next) => {
     CRUD.loginUser(req, res, next);
 });
 
-/*
-//get last weight for a user
-app.get("/API/myWeight/last/:userId", function (req, res) {
-    // search db if user already has a document of weights add value
-
-    MongoClient.connect(DBurl, function (err, db) {
-        assert.equal(null, err);
-        console.log("Connected successfully to server");
-
-        CRUD.getLastWeight(db, function (w) {
-            db.close();
-            res.send(w);
-        }, Number(req.params.userId));
-    });
-});*/
+app.post('/API/submit_event', (req, res, next) =>{
+    CRUD.submitEvent(req, res, next);
+});
 
 app.listen(process.env.PORT || 5000, () => {
     console.log("Listening on :5000");

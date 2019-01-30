@@ -30,7 +30,7 @@ class App extends Component {
 
     submitNewEvent(event) {
         let cookies = new Cookies();
-        event.id = cookies.get("EVENT_APP_ID_COOKIE");
+        event.userId = cookies.get("EVENT_APP_ID_COOKIE");
         console.log(event);
         axios.post('/API/submit_event', event)
             .then((res) => {
