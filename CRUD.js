@@ -101,7 +101,57 @@ exports.findUser = (req, res, next) => {
     })(req, res, next);
 };
 
+exports.getEvents = (req, res, next) => {
+    console.log(req.params.id);
+    let connection = mysql.createConnection({
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE
+    });
+
+    connection.connect();
+
+    connection.query('SELECT * FROM EVENTS WHERE USER_ID="' + req.params.id + '" ORDER BY ID DESC;',
+        function (err, rows, fields) {
+            console.log(rows);
+            if (err) {
+                console.log(err);
+                res.json({ message:'No se pudo agregar el evento, revise sus parámetros e intente nuevamente'});
+            }
+            res.json(rows);
+        });
+
+    connection.end()
+};
+
 exports.submitEvent = (req, res, next) => {
+    let ev = req.body;
+    console.log(ev.initDate);
+    let connection = mysql.createConnection({
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE
+    });
+
+    connection.connect();
+
+    connection.query('INSERT INTO EVENTS (USER_ID, NAME, CATEGORY, PLACE, DIRECTION, INIT_DATE, END_DATE, MODE) ' +
+        'VALUES ("' + ev.userId + '", "' + ev.name + '", "' + ev.category + '", "' + ev.place + '", "' + ev.direction + '", "'
+        + ev.initDate + '", "' + ev.endDate + '", "' + ev.mode + '");',
+        function (err, rows, fields) {
+            if (err) {
+                console.log(err);
+                res.json({ message:'No se pudo agregar el evento, revise sus parámetros e intente nuevamente'});
+            }
+            res.json({ message:'El evento ha sido agregado satisfactoriamente'});
+        });
+
+    connection.end()
+};
+
+exports.editEvent = (req, res, next) => {
     let ev = req.body;
     let connection = mysql.createConnection({
         host: process.env.MYSQL_HOST,
@@ -113,12 +163,10 @@ exports.submitEvent = (req, res, next) => {
     connection.connect();
 
     connection.query('INSERT INTO EVENTS (USER_ID, NAME, CATEGORY, PLACE, DIRECTION, INIT_DATE, END_DATE, MODE) ' +
-        'VALUES (' + ev.userId + ', ' + ev.name + ', ' + ev.category + ', ' + ev.place + ', ' + ev.direction + ', '
-        + ev.initDate + ', ' + ev.endDate + ')',
+        'VALUES (' + ev.userId + ', "' + ev.name + '", "' + ev.category + '", "' + ev.place + '", "' + ev.direction + '", "'
+        + ev.initDate + '", "' + ev.endDate + '", "' + ev.mode + '");',
         function (err, rows, fields) {
             if (err) throw err;
-
-            console.log('The solution is: ', rows[0].solution)
         });
 
     connection.end()

@@ -2,21 +2,22 @@ import React, {Component} from 'react';
 import UserNavbar from '../navbars/UserNavbar';
 import PropTypes from 'prop-types';
 
-import './NewEventView.css';
+import './EditEventView.css';
 
-export default class NewEventView extends Component {
+export default class EditEventView extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            name: null,
-            category: "CONFERENCIA",
-            place: null,
-            direction: null,
-            initDate: null,
-            endDate: null,
-            mode: "PRESENCIAL",
-            message: null
+            id: this.props.event.id,
+            name: this.props.event.name,
+            category: this.props.event.category,
+            place: this.props.event.place,
+            direction: this.props.event.direction,
+            initDate: this.props.event.initDate,
+            endDate: this.props.event.endDate,
+            mode: this.props.event.mode,
+            message: this.props.event.category
         }
     }
 
@@ -80,10 +81,11 @@ export default class NewEventView extends Component {
      * Method that submits a new event
      * @param e not that kind of event
      */
-    onSubmitNewEvent(e) {
+    submitEditEvent(e) {
         e.preventDefault();
         if (this.state.name && this.state.category && this.state.place && this.state.direction && this.state.initDate && this.state.endDate && this.state.mode){
             this.props.submitNewEvent({
+                id: this.state.id,
                 name: this.state.name,
                 category: this.state.category,
                 place: this.state.place,
@@ -167,7 +169,7 @@ export default class NewEventView extends Component {
                                 </div>
                                 <div className="form-group">
                                     <button type="submit" className="btn btn-success btn-block"
-                                            onClick={this.onSubmitNewEvent.bind(this)}> Crear
+                                            onClick={this.submitEditEvent.bind(this)}> Actualizar
                                     </button>
                                 </div>
                             </form>
@@ -180,6 +182,7 @@ export default class NewEventView extends Component {
     }
 }
 
-NewEventView.propTypes = {
-    submitNewEvent: PropTypes.func.isRequired
+EditEventView.propTypes = {
+    submitEditEvent: PropTypes.func.isRequired,
+    event : PropTypes.object.isRequired,
 };

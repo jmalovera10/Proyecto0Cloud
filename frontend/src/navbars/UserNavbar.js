@@ -7,7 +7,7 @@ export default class UserNavbar extends Component {
     render() {
         return (
             <nav className="navbar navbar-dark bg-dark">
-                <a className="navbar-brand" href="#">Eventapp</a>
+                <h1 className="navbar-brand" >Eventapp</h1>
                 <Link to='/events'>Eventos</Link>
                 <div className="ml-auto">
                     <Link to='/new_event'><button className="btn btn-success">Nuevo Evento</button></Link>

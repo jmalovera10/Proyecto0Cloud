@@ -3,14 +3,11 @@ import { Link } from 'react-router-dom'
 import './IndexNavbar.css';
 
 export default class IndexNavbar extends Component {
-    constructor(props){
-        super(props)
-    }
 
     render() {
         return (
             <nav className="navbar navbar-dark bg-dark">
-                <a className="navbar-brand" href="#">Eventapp</a>
+                <h1 className="navbar-brand">Eventapp</h1>
                 <div className="ml-auto">
                     {
                         this.props.isRegister?
