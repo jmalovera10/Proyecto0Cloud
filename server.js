@@ -39,6 +39,10 @@ app.get('/API/events/:id', (req, res, next) =>{
     CRUD.getEvents(req, res, next);
 });
 
+app.get('/API/events/:userid/:eventid', (req, res, next) =>{
+    CRUD.getUserEvent(req, res, next);
+});
+
 app.post('/API/submit_event', (req, res, next) =>{
     CRUD.submitEvent(req, res, next);
 });

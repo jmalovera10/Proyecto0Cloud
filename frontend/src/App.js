@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Events from './home/EventsView';
 import NewEventView from './home/NewEventView';
 import EditEventView from './home/EditEventView';
+import EventDetailView from './home/EventDetailView';
 import RegisterView from './index/RegisterView';
 import LoginView from "./index/LoginView";
 import {Route, Switch, Redirect} from "react-router-dom";
@@ -39,7 +40,7 @@ class App extends Component {
     getEvents() {
         let cookies = new Cookies();
         let userId = cookies.get("EVENT_APP_ID_COOKIE");
-        axios.get('/API/events/'+userId)
+        axios.get('/API/events/' + userId)
             .then((res) => {
                 return res.data;
             })
@@ -60,7 +61,6 @@ class App extends Component {
         event.userId = cookies.get("EVENT_APP_ID_COOKIE");
         axios.post('/API/submit_event', event)
             .then((res) => {
-                console.log(res);
                 return res.data;
             })
             .then((data) => {
@@ -78,10 +78,8 @@ class App extends Component {
     submitEditEvent(event) {
         let cookies = new Cookies();
         event.userId = cookies.get("EVENT_APP_ID_COOKIE");
-        console.log(event);
         axios.post('/API/edit_event', event)
             .then((res) => {
-                console.log(res);
                 return res.data;
             })
             .then((data) => {
@@ -126,6 +124,11 @@ class App extends Component {
                                 <Redirect to='/events'/>
                                 : <RegisterView updateAuth={this.updateAuth}/>
                         }/>
+                        <Route path='/events/:id' render={(props) => {
+                            return this.state.auth ?
+                                <EventDetailView eventId={props.match.params.id}/>
+                                : <Redirect to='/register'/>
+                        }}/>
                         <Route path='/events' render={() =>
                             this.state.auth ?
                                 <Events events={this.state.events}/>

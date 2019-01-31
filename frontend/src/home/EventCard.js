@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import './EventsView.css';
@@ -23,7 +24,7 @@ export default class EventCard extends Component {
                         </div>
                         <h6 className="card-subtitle mb-2 text-muted">Fecha inicio: {this.props.event.INIT_DATE}</h6>
                         <h6 className="card-subtitle mb-2 text-muted">Fecha fin: {this.props.event.END_DATE}</h6>
-                        <button className="btn btn-success"> Ver más</button>
+                        <Link to={"/events/"+this.props.event.ID}><button className="btn btn-success"> Ver más</button></Link>
                     </div>
                 </div>
             </div>

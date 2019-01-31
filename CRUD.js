@@ -102,7 +102,6 @@ exports.findUser = (req, res, next) => {
 };
 
 exports.getEvents = (req, res, next) => {
-    console.log(req.params.id);
     let connection = mysql.createConnection({
         host: process.env.MYSQL_HOST,
         user: process.env.MYSQL_USER,
@@ -114,7 +113,30 @@ exports.getEvents = (req, res, next) => {
 
     connection.query('SELECT * FROM EVENTS WHERE USER_ID="' + req.params.id + '" ORDER BY ID DESC;',
         function (err, rows, fields) {
-            console.log(rows);
+            if (err) {
+                console.log(err);
+                res.json({ message:'No se pudo agregar el evento, revise sus parámetros e intente nuevamente'});
+            }
+            res.json(rows);
+        });
+
+    connection.end()
+};
+
+exports.getUserEvent = (req, res, next) => {
+    let userId = req.params.userid;
+    let eventId = req.params.eventid;
+    let connection = mysql.createConnection({
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE
+    });
+
+    connection.connect();
+
+    connection.query('SELECT * FROM EVENTS WHERE USER_ID="' + userId + '" AND ID='+eventId+';',
+        function (err, rows, fields) {
             if (err) {
                 console.log(err);
                 res.json({ message:'No se pudo agregar el evento, revise sus parámetros e intente nuevamente'});
@@ -127,7 +149,6 @@ exports.getEvents = (req, res, next) => {
 
 exports.submitEvent = (req, res, next) => {
     let ev = req.body;
-    console.log(ev.initDate);
     let connection = mysql.createConnection({
         host: process.env.MYSQL_HOST,
         user: process.env.MYSQL_USER,
