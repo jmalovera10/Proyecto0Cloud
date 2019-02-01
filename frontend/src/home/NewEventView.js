@@ -90,8 +90,8 @@ export default class NewEventView extends Component {
                 mode: this.state.mode
             });
         }else{
-            this.setState({message: "Debe llenar todos los campos para continuar"})
             e.preventDefault();
+            this.setState({message: "Debe llenar todos los campos para continuar"});
         }
     }
 
