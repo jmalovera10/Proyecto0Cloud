@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "cd frontend && npm start"
   },
   "repository": {
     "type": "git",
@@ -36,6 +38,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "request": "^2.83.0",
-    "mongoose": "^5.4.7"
+    "mongoose": "^5.4.7",
+    "env-cmd": "^8.0.2"
   }
 }
