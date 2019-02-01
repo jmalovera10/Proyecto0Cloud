@@ -102,6 +102,7 @@ exports.findUser = (req, res, next) => {
 };
 
 exports.getEvents = (req, res, next) => {
+    let userId = req.params.userId;
     let connection = mysql.createConnection({
         host: process.env.MYSQL_HOST,
         user: process.env.MYSQL_USER,
@@ -111,7 +112,7 @@ exports.getEvents = (req, res, next) => {
 
     connection.connect();
 
-    connection.query('SELECT * FROM EVENTS WHERE USER_ID="' + req.params.id + '" ORDER BY ID DESC;',
+    connection.query('SELECT * FROM EVENTS WHERE USER_ID="' + userId + '" ORDER BY ID DESC;',
         function (err, rows, fields) {
             if (err) {
                 console.log(err);
@@ -166,7 +167,10 @@ exports.submitEvent = (req, res, next) => {
                 console.log(err);
                 res.json({ message:'No se pudo agregar el evento, revise sus parámetros e intente nuevamente'});
             }
-            res.json({ message:'El evento ha sido agregado satisfactoriamente'});
+            res.json({
+                message:'El evento ha sido agregado satisfactoriamente',
+                event: ev
+            });
         });
 
     connection.end()
@@ -174,6 +178,7 @@ exports.submitEvent = (req, res, next) => {
 
 exports.editEvent = (req, res, next) => {
     let ev = req.body;
+    let userId = req.params.userId;
     let connection = mysql.createConnection({
         host: process.env.MYSQL_HOST,
         user: process.env.MYSQL_USER,
@@ -183,11 +188,39 @@ exports.editEvent = (req, res, next) => {
 
     connection.connect();
 
-    connection.query('INSERT INTO EVENTS (USER_ID, NAME, CATEGORY, PLACE, DIRECTION, INIT_DATE, END_DATE, MODE) ' +
-        'VALUES (' + ev.userId + ', "' + ev.name + '", "' + ev.category + '", "' + ev.place + '", "' + ev.direction + '", "'
-        + ev.initDate + '", "' + ev.endDate + '", "' + ev.mode + '");',
+    connection.query('UPDATE EVENTS SET NAME="'+ev.name+'", CATEGORY="'+ev.category+'", PLACE="'+ev.place+'", ' +
+        'DIRECTION="'+ev.direction+'", INIT_DATE="'+ev.initDate+'", END_DATE="'+ev.endDate+'", MODE="'+ev.mode+'"' +
+        'WHERE ID='+ev.id+' AND USER_ID="'+userId+'";',
         function (err, rows, fields) {
-            if (err) throw err;
+            if (err) {
+                console.log(err);
+                res.json({ message:'No se pudo editar el evento, revise sus parámetros e intente nuevamente'});
+            }
+            res.json(rows)
+        });
+
+    connection.end()
+};
+
+exports.deleteEvent = (req, res, next) => {
+    let eventId = req.params.eventId;
+    let userId = req.params.userId;
+    let connection = mysql.createConnection({
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE
+    });
+
+    connection.connect();
+
+    connection.query('DELETE FROM EVENTS WHERE USER_ID="' + userId + '" AND ID='+eventId+';',
+        function (err, rows, fields) {
+            if (err) {
+                console.log(err);
+                res.json({ message:'No se pudo agregar el evento, revise sus parámetros e intente nuevamente'});
+            }
+            res.json(rows);
         });
 
     connection.end()

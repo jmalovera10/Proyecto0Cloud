@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import UserNavbar from '../navbars/UserNavbar';
 import PropTypes from 'prop-types';
 
 import './EditEventView.css';
@@ -9,15 +8,15 @@ export default class EditEventView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: this.props.event.id,
-            name: this.props.event.name,
-            category: this.props.event.category,
-            place: this.props.event.place,
-            direction: this.props.event.direction,
-            initDate: this.props.event.initDate,
-            endDate: this.props.event.endDate,
-            mode: this.props.event.mode,
-            message: this.props.event.category
+            id: this.props.event.ID,
+            name: this.props.event.NAME,
+            category: this.props.event.CATEGORY,
+            place: this.props.event.PLACE,
+            direction: this.props.event.DIRECTION,
+            initDate: this.props.event.INIT_DATE,
+            endDate: this.props.event.END_DATE,
+            mode: this.props.event.MODE,
+            message: ""
         }
     }
 
@@ -82,9 +81,9 @@ export default class EditEventView extends Component {
      * @param e not that kind of event
      */
     submitEditEvent(e) {
-        e.preventDefault();
-        if (this.state.name && this.state.category && this.state.place && this.state.direction && this.state.initDate && this.state.endDate && this.state.mode){
-            this.props.submitNewEvent({
+        //e.preventDefault();
+        if (this.state.name && this.state.category && this.state.place && this.state.direction && this.state.initDate && this.state.endDate && this.state.mode) {
+            this.props.submitEditEvent({
                 id: this.state.id,
                 name: this.state.name,
                 category: this.state.category,
@@ -94,8 +93,9 @@ export default class EditEventView extends Component {
                 endDate: this.state.endDate,
                 mode: this.state.mode
             });
-        }else{
+        } else {
             this.setState({message: "Debe llenar todos los campos para continuar"})
+            e.preventDefault();
         }
     }
 
@@ -103,12 +103,11 @@ export default class EditEventView extends Component {
 
         return (
             <div>
-                <UserNavbar/>
                 <div className="row justify-content-around">
                     <div className="col-sm-3 col-lg-4"/>
                     <div className="col-sm-6 col-lg-4">
                         <article className="card-body">
-                            <h4 className="card-title text-center mb-4 mt-1">Nuevo Evento</h4>
+                            <h4 className="card-title text-center mb-4 mt-1">Editar Evento</h4>
                             <hr/>
                             {
                                 this.state.message ?
@@ -119,13 +118,15 @@ export default class EditEventView extends Component {
                                 <div className="form-group">
                                     <label>Nombre del evento</label>
                                     <div className="input-group">
-                                        <input name="" className="form-control" placeholder="Mi Evento"
+                                        <input value={this.state.name} name="" className="form-control"
+                                               placeholder="Mi Evento"
                                                type="text" onChange={this.onNameChange.bind(this)}/>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Categoría del evento</label>
-                                    <select className="form-control" onChange={this.onCategoryChange.bind(this)}>
+                                    <select value={this.state.category} className="form-control"
+                                            onChange={this.onCategoryChange.bind(this)}>
                                         <option value="CONFERENCIA">Conferencia</option>
                                         <option value="SEMINARIO">Seminario</option>
                                         <option value="CONGRESO">Congreso</option>
@@ -135,34 +136,36 @@ export default class EditEventView extends Component {
                                 <div className="form-group">
                                     <label>Lugar del evento</label>
                                     <div className="input-group">
-                                        <input name="" className="form-control" placeholder="El Lugar"
+                                        <input value={this.state.place} name="" className="form-control"
+                                               placeholder="El Lugar"
                                                type="text" onChange={this.onPlaceChange.bind(this)}/>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Dirección del evento</label>
                                     <div className="input-group">
-                                        <input name="" className="form-control" placeholder="La Dirección"
+                                        <input value={this.state.direction} name="" className="form-control"
+                                               placeholder="La Dirección"
                                                type="text" onChange={this.onDirectionChange.bind(this)}/>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Fecha inicio</label>
                                     <div className="input-group">
-                                        <input name="" className="form-control"
+                                        <input value={this.state.initDate} name="" className="form-control"
                                                type="date" onChange={this.onInitDateChange.bind(this)}/>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Fecha fin</label>
                                     <div className="input-group">
-                                        <input name="" className="form-control"
+                                        <input value={this.state.endDate} name="" className="form-control"
                                                type="date" onChange={this.onEndDateChange.bind(this)}/>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Modalidad del evento</label>
-                                    <select className="form-control" onChange={this.onModeChange.bind(this)}>
+                                    <select value={this.state.mode} className="form-control" onChange={this.onModeChange.bind(this)}>
                                         <option value="PRESENCIAL">Presencial</option>
                                         <option value="VIRTUAL">Virtual</option>
                                     </select>
@@ -184,5 +187,5 @@ export default class EditEventView extends Component {
 
 EditEventView.propTypes = {
     submitEditEvent: PropTypes.func.isRequired,
-    event : PropTypes.object.isRequired,
+    event: PropTypes.object.isRequired,
 };

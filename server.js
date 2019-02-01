@@ -35,7 +35,7 @@ app.post('/API/loginUser', (req, res, next) => {
     CRUD.loginUser(req, res, next);
 });
 
-app.get('/API/events/:id', (req, res, next) =>{
+app.get('/API/events/:userId', (req, res, next) =>{
     CRUD.getEvents(req, res, next);
 });
 
@@ -45,6 +45,14 @@ app.get('/API/events/:userid/:eventid', (req, res, next) =>{
 
 app.post('/API/submit_event', (req, res, next) =>{
     CRUD.submitEvent(req, res, next);
+});
+
+app.put('/API/edit_event/:userId', (req, res, next) =>{
+    CRUD.editEvent(req, res, next);
+});
+
+app.delete('/API/delete_event/:userId/:eventId', (req, res, next) =>{
+    CRUD.deleteEvent(req, res, next);
 });
 
 app.listen(process.env.PORT || 5000, () => {

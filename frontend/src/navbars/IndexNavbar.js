@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import './IndexNavbar.css';
 
 export default class IndexNavbar extends Component {
@@ -19,3 +20,7 @@ export default class IndexNavbar extends Component {
         );
     }
 }
+
+IndexNavbar.propTypes = {
+    isRegister: PropTypes.bool.isRequired
+};

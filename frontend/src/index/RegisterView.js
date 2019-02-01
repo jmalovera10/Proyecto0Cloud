@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import IndexNavbar from '../navbars/IndexNavbar';
 import './RegisterView.css';
 import PropTypes from "prop-types";
 import Cookies from "universal-cookie";
@@ -91,7 +90,6 @@ export default class RegisterView extends Component {
     render() {
         return (
             <div>
-                <IndexNavbar isRegister={true}/>
                 <div className="jumbotron jumbotron-fluid">
                     <div className="container">
                         <h1 className="display-4">Eventapp</h1>

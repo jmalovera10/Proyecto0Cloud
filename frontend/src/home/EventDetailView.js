@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import UserNavbar from '../navbars/UserNavbar';
 import './EventDetailView.css';
 import axios from "axios";
 import PropTypes from "prop-types";
@@ -37,7 +36,6 @@ export default class EventDetailView extends Component {
     render() {
         return (
             <div>
-                <UserNavbar/>
                 <div className="jumbotron jumbotron-fluid">
                     <div className="container">
                         <h1 className="display-4">{this.state.event ? this.state.event.NAME : null}</h1>

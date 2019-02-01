@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import UserNavbar from '../navbars/UserNavbar';
 import PropTypes from 'prop-types';
 
 import './NewEventView.css';
@@ -15,8 +14,7 @@ export default class NewEventView extends Component {
             direction: null,
             initDate: null,
             endDate: null,
-            mode: "PRESENCIAL",
-            message: null
+            mode: "PRESENCIAL"
         }
     }
 
@@ -81,7 +79,6 @@ export default class NewEventView extends Component {
      * @param e not that kind of event
      */
     onSubmitNewEvent(e) {
-        e.preventDefault();
         if (this.state.name && this.state.category && this.state.place && this.state.direction && this.state.initDate && this.state.endDate && this.state.mode){
             this.props.submitNewEvent({
                 name: this.state.name,
@@ -94,6 +91,7 @@ export default class NewEventView extends Component {
             });
         }else{
             this.setState({message: "Debe llenar todos los campos para continuar"})
+            e.preventDefault();
         }
     }
 
@@ -101,7 +99,6 @@ export default class NewEventView extends Component {
 
         return (
             <div>
-                <UserNavbar/>
                 <div className="row justify-content-around">
                     <div className="col-sm-3 col-lg-4"/>
                     <div className="col-sm-6 col-lg-4">
@@ -109,8 +106,8 @@ export default class NewEventView extends Component {
                             <h4 className="card-title text-center mb-4 mt-1">Nuevo Evento</h4>
                             <hr/>
                             {
-                                this.state.message ?
-                                    <p className="text-success text-center">{this.state.message}</p>
+                                this.props.message ?
+                                    <p className="text-success text-center">{this.props.message}</p>
                                     : null
                             }
                             <form>
@@ -181,5 +178,6 @@ export default class NewEventView extends Component {
 }
 
 NewEventView.propTypes = {
-    submitNewEvent: PropTypes.func.isRequired
+    submitNewEvent: PropTypes.func.isRequired,
+    message: PropTypes.string.isRequired
 };

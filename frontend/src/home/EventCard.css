@@ -1,0 +1,11 @@
+.option-button{
+    background-color: transparent;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.cancel-button{
+    color: white;
+}

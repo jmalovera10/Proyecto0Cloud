@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import UserNavbar from '../navbars/UserNavbar';
 import EventCard from './EventCard';
 import PropTypes from 'prop-types';
 
@@ -9,15 +8,16 @@ export default class EventsView extends Component {
 
     render() {
         let eventCards = [];
-        if(this.props.events) {
+        if (this.props.events) {
+            let i = 0;
             this.props.events.forEach((e) => {
-                console.log(e);
-                eventCards.push(<EventCard key={e.ID} event={e}/>);
+                eventCards.push(<EventCard key={e.ID} deleteEvent={this.props.deleteEvent} eventPosition={i}
+                                           event={e}/>);
+                i++;
             });
         }
         return (
             <div>
-                <UserNavbar/>
                 <div className="jumbotron jumbotron-fluid">
                     <div className="container">
                         <h1 className="display-4">Mis eventos</h1>
@@ -32,5 +32,6 @@ export default class EventsView extends Component {
 }
 
 EventsView.propTypes = {
-    events: PropTypes.array.isRequired
+    events: PropTypes.array.isRequired,
+    deleteEvent: PropTypes.func.isRequired
 };

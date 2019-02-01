@@ -10,6 +10,8 @@ import Cookies from 'universal-cookie';
 import axios from 'axios';
 
 import './App.css';
+import IndexNavbar from "./navbars/IndexNavbar";
+import UserNavbar from "./navbars/UserNavbar";
 
 class App extends Component {
     constructor(props) {
@@ -18,12 +20,15 @@ class App extends Component {
             auth: false,
             isRegister: null,
             editEvent: null,
-            events: []
+            events: [],
+            messageSubmit: ""
         };
         this.updateAuth = this.updateAuth.bind(this);
         this.getEvents = this.getEvents.bind(this);
         this.submitNewEvent = this.submitNewEvent.bind(this);
         this.submitEditEvent = this.submitEditEvent.bind(this);
+        this.deleteEvent = this.deleteEvent.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     /**
@@ -64,6 +69,13 @@ class App extends Component {
                 return res.data;
             })
             .then((data) => {
+                if (data.event) {
+                    this.setState((prevState) => ({
+                        events: prevState.events.concat(data.event)
+                    }));
+                }
+                console.log(data.event);
+                this.setState({messageSubmit: data.message})
 
             })
             .catch((err) => {
@@ -77,17 +89,53 @@ class App extends Component {
      */
     submitEditEvent(event) {
         let cookies = new Cookies();
-        event.userId = cookies.get("EVENT_APP_ID_COOKIE");
-        axios.post('/API/edit_event', event)
+        let userId = cookies.get("EVENT_APP_ID_COOKIE");
+        axios.put('/API/edit_event/'+userId, event)
             .then((res) => {
                 return res.data;
             })
             .then((data) => {
-
+                this.setState({messageSubmit: data.message})
             })
             .catch((err) => {
                 console.log(err);
             });
+    }
+
+    /**
+     * Method that deletes an event
+     * @param eventId of the event to be deleted
+     * @param eventPosition of the event to be removed from the list
+     */
+    deleteEvent(eventId, eventPosition) {
+        let cookies = new Cookies();
+        let userId = cookies.get("EVENT_APP_ID_COOKIE");
+        this.setState((prevState) => ({
+                events: prevState.events.filter((val, index) => {
+                    console.log(index);
+                    console.log(eventPosition);
+                    return index !== eventPosition;
+                })
+            })
+        );
+        axios.delete('/API/delete_event/' + userId + '/' + eventId)
+            .then((res) => {
+                return res.data;
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    /**
+     * Method that logs out a user
+     */
+    logout() {
+        let cookies = new Cookies();
+        cookies.remove("EVENT_APP_ID_COOKIE");
+        cookies.remove("EVENT_APP_TOKEN_COOKIE");
+        this.setState({auth: false});
+        window.location.reload();
     }
 
     componentDidMount() {
@@ -104,20 +152,34 @@ class App extends Component {
             <div id='main'>
                 {
                     <Switch>
+                        <Route path="/register" render={()=>
+                            <IndexNavbar isRegister={true}/>
+                        }/>
+                        <Route path="/login" render={()=>
+                            <IndexNavbar isRegister={false}/>
+                        }/>
+                        <Route path="/" render={()=>
+                            <UserNavbar logout={this.logout}/>
+                        }/>
+                    </Switch>
+                }
+                {
+                    <Switch>
                         <Route path='/new_event' render={() =>
                             this.state.auth ?
-                                <NewEventView submitNewEvent={this.submitNewEvent}/>
+                                <NewEventView submitNewEvent={this.submitNewEvent} message={this.state.messageSubmit}/>
                                 : <Redirect to='/register'/>
                         }/>
-                        <Route path='/edit_event' render={() =>
+                        <Route path='/edit_event/:eventPosition' render={(props) =>
                             this.state.auth ?
-                                <EditEventView submitEditEvent={this.submitEditEvent} event={this.state.editEvent}/>
+                                <EditEventView submitEditEvent={this.submitEditEvent}
+                                               event={this.state.events[props.match.params.eventPosition]}/>
                                 : <Redirect to='/register'/>
                         }/>
                         <Route path='/login' render={() =>
                             this.state.auth ?
                                 <Redirect to='/events'/>
-                                : <LoginView updateAuth={this.updateAuth}/>
+                                : <LoginView updateAuth={this.updateAuth} getEvents={this.getEvents}/>
                         }/>
                         <Route path='/register' render={() =>
                             this.state.auth ?
@@ -131,7 +193,7 @@ class App extends Component {
                         }}/>
                         <Route path='/events' render={() =>
                             this.state.auth ?
-                                <Events events={this.state.events}/>
+                                <Events events={this.state.events} deleteEvent={this.deleteEvent}/>
                                 : <Redirect to='/register'/>
                         }/>
                         <Route path='/' render={() =>
