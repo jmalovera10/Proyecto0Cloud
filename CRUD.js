@@ -150,6 +150,7 @@ exports.getUserEvent = (req, res, next) => {
 
 exports.submitEvent = (req, res, next) => {
     let ev = req.body;
+    console.log(ev);
     let connection = mysql.createConnection({
         host: process.env.MYSQL_HOST,
         user: process.env.MYSQL_USER,
