@@ -135,8 +135,8 @@ class App extends Component {
         let cookies = new Cookies();
         cookies.remove("EVENT_APP_ID_COOKIE");
         cookies.remove("EVENT_APP_TOKEN_COOKIE");
-        this.setState({auth: false});
         window.location.reload();
+        this.setState({auth: false});
     }
 
     componentDidMount() {
