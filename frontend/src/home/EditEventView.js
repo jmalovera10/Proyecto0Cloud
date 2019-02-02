@@ -81,7 +81,7 @@ export default class EditEventView extends Component {
      * @param e not that kind of event
      */
     submitEditEvent(e) {
-        //e.preventDefault();
+        e.preventDefault();
         if (this.state.name && this.state.category && this.state.place && this.state.direction && this.state.initDate && this.state.endDate && this.state.mode) {
             this.props.submitEditEvent({
                 id: this.state.id,
@@ -94,7 +94,7 @@ export default class EditEventView extends Component {
                 mode: this.state.mode
             });
         } else {
-            e.preventDefault();
+            //e.preventDefault();
             this.setState({message: "Debe llenar todos los campos para continuar"});
         }
     }

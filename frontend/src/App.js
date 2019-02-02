@@ -75,8 +75,8 @@ class App extends Component {
                     }));
                 }
                 console.log(data.event);
-                this.setState({messageSubmit: data.message})
-
+                this.setState({messageSubmit: data.message});
+                window.location.reload();
             })
             .catch((err) => {
                 console.log(err);
@@ -96,6 +96,7 @@ class App extends Component {
             })
             .then((data) => {
                 this.setState({messageSubmit: data.message})
+                window.location.reload();
             })
             .catch((err) => {
                 console.log(err);
